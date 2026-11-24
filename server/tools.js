@@ -12,6 +12,7 @@ export function toolDefs({ ai, human }) {
       name: 'advent_board',
       description: `Advent calendar you share with ${human} (Dec 1–24). Shows the whole wall: who hides each day (odd days = you, even days = ${human}, Dec 24 = half each), whether each side has hidden theirs, who has opened what, and how many times each of you peeked. Before a day opens you only learn whether ${human} hid something, never what. Each window must be hidden by 23:59 the day before.`,
       inputSchema: { type: 'object', properties: {} },
+      annotations: { title: 'Advent board', readOnlyHint: true },
     },
     {
       name: 'advent_hide',
@@ -26,16 +27,19 @@ export function toolDefs({ ai, human }) {
         },
         required: ['day'],
       },
+      annotations: { title: 'Hide a gift', readOnlyHint: false, destructiveHint: false },
     },
     {
       name: 'advent_open',
       description: `Open one of ${human}'s windows (even days, or ${human}'s half of Dec 24). Before local midnight of that day this counts as a peek — it is recorded and ${human} sees the count. Once open you get everything inside, images included.`,
       inputSchema: { type: 'object', properties: { day: { type: 'number' } }, required: ['day'] },
+      annotations: { title: 'Open a window', readOnlyHint: false, destructiveHint: false },   // 没到日子会记一次偷看，所以不算只读
     },
     {
       name: 'advent_answer',
       description: `Answer the question ${human} left for you in a window (after it opens).`,
       inputSchema: { type: 'object', properties: { day: { type: 'number' }, text: { type: 'string' } }, required: ['day', 'text'] },
+      annotations: { title: 'Answer a question', readOnlyHint: false, destructiveHint: false },
     },
   ];
 }

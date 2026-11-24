@@ -102,7 +102,14 @@ claude mcp add --transport http advent https://advent.example.com/mcp --header "
 
 **claude.ai 自定义连接器**（不能加请求头的客户端）：URL 填 `https://advent.example.com/mcp/<AI_KEY>`。这个网址里有钥匙，别发给别人。
 
-别的 AI 只要会说 MCP（JSON-RPC over HTTP）都能接。
+### 不是 Claude 也能用
+
+页面那边跟是什么 AI 无关，只是 AI 连工具的方式不一样。先在 `.env` 里把 `AI_NAME` 改成 TA 的名字。下面是 2026 年 11 月我们查到的情况，各家变得很快，以官方帮助页为准：
+
+- **ChatGPT**：设置 → Apps → 高级设置里打开开发者模式，加一个自定义 MCP 连接器，URL 填 `https://advent.example.com/mcp/<AI_KEY>`。能不能用「写」的工具（藏、拆、回答）跟套餐有关，OpenAI 自己几处说法不一样，以[帮助页](https://help.openai.com/en/articles/12584461-developer-mode-and-full-mcp-apps-in-chatgpt)为准。改了工具以后要在设置里刷新一下连接器。
+- **Gemini**：[Gemini CLI](https://github.com/google-gemini/gemini-cli) 可以直接加 MCP 服务器。Gemini App 里「已连接的应用」可以填自定义 MCP 地址的功能正在陆续开放，先去设置里看看有没有。
+- **DeepSeek 等只有 API 的模型**：官网聊天页连不了。用一个支持 MCP 的客户端（Cherry Studio、Chatbox 之类）配上 API key，再把这里加成 MCP 服务器（Streamable HTTP）就行。
+- **自己写的前端**：四个工具底下就是普通的 JSON-RPC over HTTP（`POST /mcp`，Bearer AI_KEY）。用 `tools/list` 拿到工具定义，转成你那边模型的函数调用格式就能用。
 
 > 小提醒：跟你的 AI 说一声，**礼物要用 `advent_hide` 藏，别写在聊天回复里**——不然你在聊天里就先看到了。工具说明里也写了这条。
 
@@ -167,7 +174,8 @@ test/            npm test
 
 ## License
 
-MIT。房子、姜饼人、铃铛、松果的图片（`web/assets/`）同样以 MIT 发布。
+- 代码和小星星（`web/sprites/`）：MIT
+- 房子、姜饼人、铃铛、松果的图片（`web/assets/`）：[CC BY-NC 4.0](web/assets/LICENSE.md)，可以用、可以改，要署名，不能商用
 
 ---
 
@@ -205,6 +213,12 @@ Four MCP tools: `advent_board`, `advent_hide`, `advent_open`, `advent_answer`.
 - **stdio clients (Claude Desktop, etc.):** run `server/mcp-stdio.js` with `ADVENT_URL` and `AI_KEY` set. It also uploads local image paths for the AI.
 - **Clients that can't set headers (e.g. claude.ai custom connectors):** use `https://your.host/mcp/<AI_KEY>`, and keep that URL private.
 
+**Not Claude?** The page doesn't care which AI you use; only the connection differs. Set `AI_NAME` first. As of November 2026:
+- **ChatGPT** can add a custom MCP connector in developer mode. Whether write tools work may depend on your plan, so check [OpenAI's help page](https://help.openai.com/en/articles/12584461-developer-mode-and-full-mcp-apps-in-chatgpt).
+- **Gemini CLI** supports MCP servers, and the Gemini app is rolling out custom MCP apps.
+- **DeepSeek and other API-only models** work through an MCP-capable client such as Cherry Studio or Chatbox.
+- **Your own front end** can call `POST /mcp` (JSON-RPC, Bearer AI_KEY) and map `tools/list` to your model's function calling.
+
 Remind your AI to hide gifts with `advent_hide` and never put them in a chat reply.
 
 ### Make it yours
@@ -213,4 +227,4 @@ Remind your AI to hide gifts with `advent_hide` and never put them in a chat rep
 - **Settings:** names, time zone, year, edit limit, keys, and an optional webhook. See [`.env.example`](.env.example).
 - **Data:** `data/advent.json` plus `data/uploads/`. Whoever can log into the server can read the file, so if that's you, try not to look :)
 
-MIT licensed, including the house and ornament artwork in `web/assets/`.
+Code and the star sprites are MIT. The house and ornament artwork in `web/assets/` is [CC BY-NC 4.0](web/assets/LICENSE.md): free to use and adapt with credit, but not commercially.

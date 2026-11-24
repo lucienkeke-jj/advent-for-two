@@ -107,6 +107,10 @@ async function rpc(msg) {
     instructions: `An advent calendar shared with ${NAMES.human}. Odd days are yours to hide, even days are ${NAMES.human}'s, Dec 24 is half each. Never put a gift in your chat reply — use advent_hide.`,
   });
   if (method === 'ping') return ok({});
+  // 有的客户端连上先问资源和提示词：没有，回空的，别让它卡住
+  if (method === 'resources/list') return ok({ resources: [] });
+  if (method === 'resources/templates/list') return ok({ resourceTemplates: [] });
+  if (method === 'prompts/list') return ok({ prompts: [] });
   if (method === 'tools/list') return ok({ tools: toolDefs(NAMES) });
   if (method === 'tools/call') {
     try { return ok({ content: await callTool(params.name, params.arguments || {}, { advent, names: NAMES, uploads: UPLOADS, notify }) }); }
