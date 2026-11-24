@@ -1,0 +1,13 @@
+{
+  "name": "advent-for-two",
+  "version": "1.0.0",
+  "description": "An advent calendar for a human and their AI: odd days the AI hides a gift, even days you do. A snowy red house, 24 shutters, no peeking.",
+  "type": "module",
+  "license": "MIT",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "start": "node --env-file-if-exists=.env server/server.js",
+    "mcp": "node --env-file-if-exists=.env server/mcp-stdio.js",
+    "test": "node --test \"test/*.test.js\""
+  }
+}
