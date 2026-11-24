@@ -10,8 +10,8 @@ import { T, pickLang } from "./i18n.js";
 
 const ME = "human";
 const ASSETS = { house: "assets/house.webp", ginger: "assets/ginger.webp", bells: "assets/bells.webp", pinecone: "assets/pinecone.webp" };
-// 扫雪的小家伙。想换成你们自己的：照 sprites/star-*.svg 的画布画五张，改这里的路径就行
-const SPRITES = { sweep: "sprites/star-sweep.svg", walk: "sprites/star-walk.svg", happy: "sprites/star-happy.svg", heart: "sprites/star-heart.svg", carry: "sprites/star-carry.svg" };
+// 扫雪的小家伙：.env 里 ADVENT_SPRITE=star（默认）或 crab。想换成你们自己的：照 sprites/star-*.svg 的画布画五张，改这里的路径就行
+const spritesOf = (set) => Object.fromEntries(["sweep", "walk", "happy", "heart", "carry"].map((k) => [k, `sprites/${set}-${k}.svg`]));
 const KIND = { lettre: "une lettre", chanson: "une chanson", melodie: "une mélodie", dessin: "un dessin", question: "une question", cadeau: "un cadeau", mot: "un mot", ensemble: "ensemble" };
 const ABCJS_URL = "https://cdn.jsdelivr.net/npm/abcjs@6.5.2/dist/abcjs-basic-min.js";
 const ABCJS_CSS = "https://cdn.jsdelivr.net/npm/abcjs@6.5.2/abcjs-audio.css";
@@ -390,7 +390,7 @@ async function main() {
   };
 
   function render() {
-    if (!house) house = mountHouse(stage, { assets: ASSETS, sprites: SPRITES, onTap: tap, labels: t.houseLabels });
+    if (!house) house = mountHouse(stage, { assets: ASSETS, sprites: spritesOf(data.sprite || "star"), onTap: tap, labels: t.houseLabels });
     boardBtn.disabled = false;
     boardBtn.onclick = () => board(data, names, () => {}, (d) => editor(data.cells[d - 1], data.edit_limit, names, () => {}, (m) => { load(); house.say(m); }), load);
     const night = data.hour >= 17 || data.hour < 6;

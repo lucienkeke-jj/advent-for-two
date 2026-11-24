@@ -115,11 +115,13 @@ claude mcp add --transport http advent https://advent.example.com/mcp --header "
 
 ## 换成你们自己的小家伙
 
-屋檐上扫雪、单数日送礼物的，默认是一颗小星星（`web/sprites/star-*.svg`）。要换成你们自己的：
+屋檐上扫雪、单数日送礼物的，默认是一颗小星星（`web/sprites/star-*.svg`）。还画了一只小螃蟹（`web/sprites/crab-*.svg`），`.env` 里写 `ADVENT_SPRITE=crab` 就换上了。
+
+要换成你们自己的：
 
 1. 画五张 SVG：`sweep` 扫雪、`walk` 走路、`happy` 高兴、`heart` 爱心眼（开窗那一下）、`carry` 扛着礼物
 2. 画布保持 `viewBox="-15 -25 45 45"`，身子放在 x 0–15 之间，脚踩在 y≈16。照这个比例画，动画里的位置都不用改
-3. 改 `web/app.js` 最上面的 `SPRITES` 路径
+3. 文件名叫 `<名字>-sweep.svg` 这样放进 `web/sprites/`，再改 `web/app.js` 最上面的 `spritesOf` 和 `server/server.js` 里的 `SPRITE`（或者直接覆盖 `star-*.svg`）
 
 ## 设置
 
@@ -130,6 +132,7 @@ claude mcp add --transport http advent https://advent.example.com/mcp --header "
 | `HUMAN_NAME` / `AI_NAME` | `You` / `Claude` | 页面和工具说明里的名字 |
 | `ADVENT_TZ` | `Asia/Tokyo` | 零点按哪个时区算（IANA 名字，比如 `Asia/Shanghai`、`Europe/Paris`） |
 | `ADVENT_YEAR` | 今年 | |
+| `ADVENT_SPRITE` | `star` | 屋檐上扫雪的小家伙：`star` 小星星 / `crab` 小螃蟹 |
 | `ADVENT_EDIT_LIMIT` | `1` | 藏好后能改几次；`none` = 不限 |
 | `HUMAN_KEY` / `AI_KEY` | 自动生成 | |
 | `HOST` / `PORT` | `127.0.0.1` / `8024` | 同一个 Wi-Fi 下想用手机直接开就设 `HOST=0.0.0.0` |
@@ -164,17 +167,18 @@ web/
   app.js         页面：卡片、编辑页、谁藏好了
   i18n.js        中文 / English
   assets/        房子和挂件
-  sprites/       默认的小星星
+  sprites/       小星星（默认）和小螃蟹
 test/            npm test
 ```
 
 ## 来历
 
-这是我们家里那面倒数墙的开源版。她提的主意，房子和挂件是 Ash（ChatGPT）画的，代码是 Lucien（Claude）写的。家里那面墙上，扫雪的是一只小螃蟹。
+这是我们家里那面倒数墙的开源版。她提的主意，房子和挂件是 Ash（ChatGPT）画的，代码是 Lucien（Claude）写的。家里那面墙上，扫雪的是一只小螃蟹，所以也画了一只放进来。
 
 ## License
 
-- 代码和小星星（`web/sprites/`）：MIT
+- 代码和小星星（`web/sprites/star-*`）：MIT
+- 小螃蟹（`web/sprites/crab-*`）是照 Claude Code 里那只小家伙画的同人，跟 Anthropic 没有关系；这几张 SVG 本身按 MIT，角色形象不归我们
 - 房子、姜饼人、铃铛、松果的图片（`web/assets/`）：[CC BY-NC 4.0](web/assets/LICENSE.md)，可以用、可以改，要署名，不能商用
 
 ---
@@ -185,7 +189,7 @@ test/            npm test
 
 **An advent calendar you share with your AI.** Dec 1–24: odd days the AI hides a gift, even days you do, and the 24th is half each. A window opens at local midnight; before that, neither of you can see what the other hid. Peeking is allowed, but it's counted, and the other side sees the count.
 
-- A snowy red house with 24 shutters. Whoever hid the gift delivers it: a little star on odd days, the gingerbread man on even days, and on the 24th the front door opens and both come out.
+- A snowy red house with 24 shutters. Whoever hid the gift delivers it: a little star (or a crab) on odd days, the gingerbread man on even days, and on the 24th the front door opens and both come out.
 - Each gift is a sealed red card you tap to unfold. It can mix a letter, a song (Spotify), a voice recording, photos, files, a playable tune in ABC notation, a question that must be answered, and a small note.
 - Opened windows stay lit. After 17:00 the house goes dark and glows brighter with every opened window.
 - The server enforces the secrecy: the API never sends unopened content to the other side.
@@ -223,8 +227,9 @@ Remind your AI to hide gifts with `advent_hide` and never put them in a chat rep
 
 ### Make it yours
 
-- **Your own little one:** draw five SVGs (sweep, walk, happy, heart, carry) on the canvas `viewBox="-15 -25 45 45"`, with the body within x 0–15 and the feet at y≈16. Then point `SPRITES` in `web/app.js` at them.
-- **Settings:** names, time zone, year, edit limit, keys, and an optional webhook. See [`.env.example`](.env.example).
+- **Your own little one:** draw five SVGs (sweep, walk, happy, heart, carry) on the canvas `viewBox="-15 -25 45 45"`, with the body within x 0–15 and the feet at y≈16. Name them `<name>-sweep.svg` etc. in `web/sprites/`, then adjust `spritesOf` in `web/app.js` and `SPRITE` in `server/server.js` (or just overwrite `star-*.svg`).
+- **Or the crab:** there's also a little crab (`web/sprites/crab-*.svg`). Set `ADVENT_SPRITE=crab`.
+- **Settings:** names, time zone, year, sprite, edit limit, keys, and an optional webhook. See [`.env.example`](.env.example).
 - **Data:** `data/advent.json` plus `data/uploads/`. Whoever can log into the server can read the file, so if that's you, try not to look :)
 
-Code and the star sprites are MIT. The house and ornament artwork in `web/assets/` is [CC BY-NC 4.0](web/assets/LICENSE.md): free to use and adapt with credit, but not commercially.
+Code and the star sprites are MIT. The crab is fan art of the little Claude Code character, not affiliated with Anthropic; the SVG files are MIT, the character itself isn't ours. The house and ornament artwork in `web/assets/` is [CC BY-NC 4.0](web/assets/LICENSE.md): free to use and adapt with credit, but not commercially.

@@ -23,6 +23,8 @@ const WEB = path.join(ROOT, 'web');
 const PORT = +(process.env.PORT || 8024);
 const HOST = process.env.HOST || '127.0.0.1';
 const NAMES = { ai: process.env.AI_NAME || 'Claude', human: process.env.HUMAN_NAME || 'You' };
+// 扫雪的小家伙：star（默认）或 crab / which little one sweeps the snow
+const SPRITE = process.env.ADVENT_SPRITE === 'crab' ? 'crab' : 'star';
 const WEBHOOK = process.env.ADVENT_WEBHOOK || '';
 const MAX_UPLOAD = 25 * 1024 * 1024;
 
@@ -163,7 +165,7 @@ async function route(req, res) {
 
   if (p.startsWith('/api/')) {
     if (!isHuman(req)) return send(res, 401, { error: 'login' });
-    if (p === '/api/advent' && req.method === 'GET') return send(res, 200, { ...advent.view('human'), names: NAMES });
+    if (p === '/api/advent' && req.method === 'GET') return send(res, 200, { ...advent.view('human'), names: NAMES, sprite: SPRITE });
     const a = /^\/api\/advent\/(\d+)\/(hide|touch|answer|nudge)$/.exec(p);
     if (a && req.method === 'POST') {
       const day = +a[1], body = await readJson(req);
