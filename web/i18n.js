@@ -1,4 +1,4 @@
-/* 页面上的字。法文小标签是装饰，两种语言都留着；其它中英各一份。
+/* 頁面上的字。法文小標籤是裝飾，兩種語言都留著；其它中英各一份。
    UI strings. The little French labels are decoration and stay in both languages. */
 
 export function pickLang() {
@@ -14,33 +14,33 @@ export const T = {
   zh: (names) => {
     const A = names ? names.ai : "TA";
     return {
-      loginTitle: "进门", keyPlaceholder: "钥匙（HUMAN_KEY）", comeIn: "进门", wrongKey: "钥匙不对",
-      cantReach: "没连上：", couldntOpen: "没打开：", uploadFailed: "上传没成功",
-      peekToast: "还没到 · 偷看记一次",
+      loginTitle: "進門", keyPlaceholder: "鑰匙（HUMAN_KEY）", comeIn: "進門", wrongKey: "鑰匙不對",
+      cantReach: "沒連上：", couldntOpen: "沒打開：", uploadFailed: "上傳沒成功",
+      peekToast: "還沒到 · 偷看記一次",
       peekCount: (h, a) => `你偷看了 ${h} 次 · ${A} 偷看了 ${a} 次`,
-      rulesLine: (tz) => `单数日 ${A} 藏，双数日你藏，24 号一人一半 · ${tz} 零点开`,
-      todo: (n) => `你还有 ${n} 格没藏 · 点自己的窗（金色数字）就能藏`,
-      attachment: "附件", qHint: "une question · 不许跳过", writeHere: "写在这里…", answer: "回答", update: "改好了",
-      answerSent: `交上去了，${A} 会看到`, answeredCanEdit: " · 已经交过，可以改", theirAnswer: `${A} 的回答`,
-      unfold: "翻开", halfEmpty: "（这一半空着）", theyOpened: `${A} 拆开了 ✓`, theyNotYet: `${A} 还没拆`,
+      rulesLine: (tz) => `單數日 ${A} 藏，雙數日你藏，24 號一人一半 · ${tz} 零點開`,
+      todo: (n) => `你還有 ${n} 格沒藏 · 點自己的窗（金色數字）就能藏`,
+      attachment: "附件", qHint: "une question · 不許跳過", writeHere: "寫在這裡…", answer: "回答", update: "改好了",
+      answerSent: `交上去了，${A} 會看到`, answeredCanEdit: " · 已經交過，可以改", theirAnswer: `${A} 的回答`,
+      unfold: "翻開", halfEmpty: "（這一半空著）", theyOpened: `${A} 拆開了 ✓`, theyNotYet: `${A} 還沒拆`,
       editorStatus: ({ locked, final, hidden, editLimit, editsLeft, deadline }) => {
-        if (locked) return "已经过了零点，这格锁住了。";
-        if (final) return `<b>已藏好 ✓</b> 改过了，就是它了。${esc(deadline)} 后自动送到 ${esc(A)} 那儿。`;
-        if (!hidden) return `还没藏。${esc(deadline)} 前要藏好` + (editLimit == null ? "，之前都能改" : `，藏好后还能改 ${editLimit} 次`) + `，零点自动送到 ${esc(A)} 那儿。`;
-        return `<b>已藏好 ✓</b> ${esc(A)} 只知道你藏好了，看不到里面。${esc(deadline)} 前` + (editLimit == null ? "都能改" : `还能改 ${editsLeft} 次`) + `，零点自动送到 ${esc(A)} 那儿。`;
+        if (locked) return "已經過了零點，這格鎖住了。";
+        if (final) return `<b>已藏好 ✓</b> 改過了，就是它了。${esc(deadline)} 後自動送到 ${esc(A)} 那裡。`;
+        if (!hidden) return `還沒藏。${esc(deadline)} 前要藏好` + (editLimit == null ? "，之前都能改" : `，藏好後還能改 ${editLimit} 次`) + `，零點自動送到 ${esc(A)} 那裡。`;
+        return `<b>已藏好 ✓</b> ${esc(A)} 只知道你藏好了，看不到裡面。${esc(deadline)} 前` + (editLimit == null ? "都能改" : `還能改 ${editsLeft} 次`) + `，零點自動送到 ${esc(A)} 那裡。`;
       },
-      labText: `写给 ${A} 的（信、一句话都行）`, labSong: "Spotify 歌曲链接（别的 https 链接也行）", labMedia: "自己唱的、录的、照片、文件",
-      labQuestion: `问 ${A} 一个问题，必须回答（可以不写）`, labNote: "附在礼物上的小卡片", labIcon: "拆开以后窗里亮的小图（不选就按内容猜）",
-      record: "● 录一段", recDone: "✓ 好了", recDiscard: "× 不要", recording: "录音中", photos: "照片", files: "音频 / 文件", remove: "拿掉",
-      noRecorder: "这个浏览器录不了音，可以传音频文件", noMic: "没拿到麦克风权限",
-      uploading: "上传中…", savingRec: "存录音…", hiding: "藏起来…", stillEmpty: "还是空的",
-      notNow: "先不藏", hideIt: "藏起来", saveChange: "改好了", hidden: `藏好了，零点前 ${A} 看不到`, changed: "改好了",
-      kind: { lettre: "信", chanson: "歌", melodie: "小曲子", dessin: "画", question: "问题", cadeau: "礼物", mot: "一句话", ensemble: "一起" },
-      boardTitle: "谁藏好了", boardNote: "只看得到藏没藏，看不到里面。每格要在前一天 23:59 前藏好。",
-      you: "你", stHidden: " ✓ 藏好了", stEmpty: " · 空着", stNotYet: " · 还没藏", view: "看看", goHide: "去藏", nudge: `提醒 ${A}`,
-      nudged: (d) => `提醒发过去了（12/${d}）`,
-      houseLabels: { house: "一栋盖着雪的红房子，24 扇窗", pine: "松果", bells: "铃铛", sprite: "扫雪的小家伙",
-        day: (d, st) => `${d} 号` + (st === "open" ? "，开着" : st === "ready" ? "，可以拆了" : "，还没到") },
+      labText: `寫給 ${A} 的（信、一句話都行）`, labSong: "Spotify 歌曲連結（別的 https 連結也行）", labMedia: "自己唱的、錄的、照片、檔案",
+      labQuestion: `問 ${A} 一個問題，必須回答（可以不寫）`, labNote: "附在禮物上的小卡片", labIcon: "拆開以後窗裡亮的小圖（不選就按內容猜）",
+      record: "● 錄一段", recDone: "✓ 好了", recDiscard: "× 不要", recording: "錄音中", photos: "照片", files: "音訊 / 檔案", remove: "拿掉",
+      noRecorder: "這個瀏覽器錄不了音，可以傳音訊檔案", noMic: "沒拿到麥克風權限",
+      uploading: "上傳中…", savingRec: "存錄音…", hiding: "藏起來…", stillEmpty: "還是空的",
+      notNow: "先不藏", hideIt: "藏起來", saveChange: "改好了", hidden: `藏好了，零點前 ${A} 看不到`, changed: "改好了",
+      kind: { lettre: "信", chanson: "歌", melodie: "小曲子", dessin: "畫", question: "問題", cadeau: "禮物", mot: "一句話", ensemble: "一起" },
+      boardTitle: "誰藏好了", boardNote: "只看得到藏沒藏，看不到裡面。每格要在前一天 23:59 前藏好。",
+      you: "你", stHidden: " ✓ 藏好了", stEmpty: " · 空著", stNotYet: " · 還沒藏", view: "看看", goHide: "去藏", nudge: `提醒 ${A}`,
+      nudged: (d) => `提醒發過去了（12/${d}）`,
+      houseLabels: { house: "一棟蓋著雪的紅房子，24 扇窗", pine: "松果", bells: "鈴鐺", sprite: "掃雪的小傢伙",
+        day: (d, st) => `${d} 號` + (st === "open" ? "，開著" : st === "ready" ? "，可以拆了" : "，還沒到") },
     };
   },
   en: (names) => {

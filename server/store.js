@@ -1,4 +1,4 @@
-// 一个 JSON 文件就够了：24 格礼物 + 几十条事件。整个读进内存，改完整个写回（先写临时文件再改名，断电也不会写坏）。
+// 一個 JSON 檔案就夠了：24 格禮物 + 幾十條事件。整個讀進記憶體，改完整個寫回（先寫臨時檔案再改名，斷電也不會寫壞）。
 // One JSON file is plenty for 24 gifts. Written atomically (tmp file + rename).
 import fs from 'node:fs';
 import path from 'node:path';

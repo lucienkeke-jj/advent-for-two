@@ -1,7 +1,7 @@
-/* advent-for-two · 页面 / the page
+/* advent-for-two · 頁面 / the page
  *
- * 点窗：到了没拆 → 开窗动画 → 合着的红卡 → 点一下翻开；拆过的 → 直接从窗口拉近；
- *       没到、是自己的格子 → 编辑页；没到、是对方的 → 偷看一次（记数，对方看得到）。
+ * 點窗：到了沒拆 → 開窗動畫 → 合著的紅卡 → 點一下翻開；拆過的 → 直接從視窗拉近；
+ *       沒到、是自己的格子 → 編輯頁；沒到、是對方的 → 偷看一次（記數，對方看得到）。
  * Tap a window: open today & unopened → animation → sealed red card → tap to unfold;
  *   already opened → zoom from the window; yours & not yet → editor; theirs & not yet → a counted peek.
  */
@@ -10,15 +10,15 @@ import { T, pickLang } from "./i18n.js";
 
 const ME = "human";
 const ASSETS = { house: "assets/house.webp", ginger: "assets/ginger.webp", bells: "assets/bells.webp", pinecone: "assets/pinecone.webp" };
-// 扫雪的小家伙：.env 里 ADVENT_SPRITE=star（默认）或 crab。想换成你们自己的：照 sprites/star-*.svg 的画布画五张，改这里的路径就行
+// 掃雪的小傢伙：.env 裡 ADVENT_SPRITE=star（預設）或 crab。想換成你們自己的：照 sprites/star-*.svg 的畫布畫五張，改這裡的路徑就行
 const spritesOf = (set) => Object.fromEntries(["sweep", "walk", "happy", "heart", "carry"].map((k) => [k, `sprites/${set}-${k}.svg`]));
 const KIND = { lettre: "une lettre", chanson: "une chanson", melodie: "une mélodie", dessin: "un dessin", question: "une question", cadeau: "un cadeau", mot: "un mot", ensemble: "ensemble" };
 const ABCJS_URL = "https://cdn.jsdelivr.net/npm/abcjs@6.5.2/dist/abcjs-basic-min.js";
 const ABCJS_CSS = "https://cdn.jsdelivr.net/npm/abcjs@6.5.2/abcjs-audio.css";
 
 const lang = pickLang();
-let t = T[lang](null);           // 名字到了以后再换成带名字的版本
-document.documentElement.lang = lang === "zh" ? "zh-CN" : "en";
+let t = T[lang](null);           // 名字到了以後再換成帶名字的版本
+document.documentElement.lang = lang === "zh" ? "zh-TW" : "en";
 
 /* ── 小工具 ── */
 function h(tag, attrs, ...kids) {
@@ -56,7 +56,7 @@ function overlay(onBackdrop) {
   return z;
 }
 
-/* ── 五线谱（ABC 记谱）：用到才去 CDN 拿 abcjs ── */
+/* ── 五線譜（ABC 記譜）：用到才去 CDN 拿 abcjs ── */
 let abcjsP = null;
 function loadAbcjs() {
   if (!abcjsP) abcjsP = new Promise((ok, no) => {
@@ -86,7 +86,7 @@ function songBlock(url) {
   return h("p", {}, h("a", { href: url, target: "_blank", rel: "noreferrer" }, "♪ " + url));
 }
 
-/* ── 一格里放的东西 ── */
+/* ── 一格里放的東西 ── */
 function itemsView(gift, { day, canAnswer, onAnswered }) {
   const frag = document.createDocumentFragment();
   for (const it of gift.items) {
@@ -120,7 +120,7 @@ function itemsView(gift, { day, canAnswer, onAnswered }) {
   return frag;
 }
 
-/* ── 拆开的卡：从窗拉近 → 合着的红卡 → 点一下翻开 ── */
+/* ── 拆開的卡：從窗拉近 → 合著的紅卡 → 點一下翻開 ── */
 function giftCard(cell, rect, fresh, names, onClose, onAnswered) {
   const d = cell.day, authors = cell.owners;
   const by = authors.length === 2 ? `${names.ai} & ${names.human}` : names[authors[0]];
@@ -167,7 +167,7 @@ function giftCard(cell, rect, fresh, names, onClose, onAnswered) {
   closeBtn.onclick = close;
 }
 
-/* ── 自己那格的编辑页 ── */
+/* ── 自己那格的編輯頁 ── */
 function editor(cell, editLimit, names, onClose, onSaved) {
   const d = cell.day, old = cell.gifts[ME], locked = cell.open;
   const editsLeft = editLimit == null ? null : old ? Math.max(0, editLimit - old.edits) : null;
@@ -228,7 +228,7 @@ function editor(cell, editLimit, names, onClose, onSaved) {
     const imgBtn = h("button", { type: "button", class: "adv-btn", onclick: () => imgIn.click() }, t.photos);
     const fileBtn = h("button", { type: "button", class: "adv-btn", onclick: () => fileIn.click() }, t.files);
 
-    // 录一段：满 3 分钟自动停
+    // 錄一段：滿 3 分鐘自動停
     const recBox = h("span", { style: { display: "contents" } });
     const recBtn = h("button", { type: "button", class: "adv-btn" }, t.record);
     recBox.append(recBtn);
@@ -296,7 +296,7 @@ function editor(cell, editLimit, names, onClose, onSaved) {
   z.append(h("div", { class: "adv-sheet adv-paper adv-face", role: "dialog", "aria-modal": "true", "aria-label": `${d} déc.` }, frame));
 }
 
-/* ── 谁藏好了（只看得到藏没藏；对方忘了藏可以提醒）── */
+/* ── 誰藏好了（只看得到藏沒藏；對方忘了藏可以提醒）── */
 function board(data, names, onClose, onEdit, onNudged) {
   const z = overlay(() => close()); z.classList.add("on");
   const close = () => { z.remove(); onClose(); };
@@ -322,7 +322,7 @@ function board(data, names, onClose, onEdit, onNudged) {
     h("div", { class: "adv-row" }, msg, h("button", { type: "button", class: "adv-btn", onclick: close }, "close")))));
 }
 
-/* ── 进门：输一次钥匙 ── */
+/* ── 進門：輸一次鑰匙 ── */
 function login(root) {
   return new Promise((resolve) => {
     const inp = h("input", { class: "adv-in1", type: "password", autocomplete: "current-password", placeholder: t.keyPlaceholder });
@@ -340,7 +340,7 @@ function login(root) {
   });
 }
 
-/* ── 整页 ── */
+/* ── 整頁 ── */
 async function main() {
   const page = document.getElementById("app");
   const wrap = h("div", { class: "adv-wrap" });
@@ -374,7 +374,7 @@ async function main() {
     if (c.open) {
       if (c.opened_by[ME]) { giftCard(c, house.rectOf(day), false, names, () => {}, load); return; }
       busy = true;
-      const anim = house.play(day);          // 点了马上开窗，别等网络；拆的记录和内容同时去拿
+      const anim = house.play(day);          // 點了馬上開窗，別等網路；拆的記錄和內容同時去拿
       try {
         await req(`/${day}/touch`, {});
         const fresh = await load();
@@ -410,7 +410,7 @@ async function main() {
     const todo = data.cells.filter((c) => !c.open && c.owners.includes(ME) && !c.hidden[ME]).length;
     peeks.replaceChildren(data.peeks.human || data.peeks.ai ? t.peekCount(data.peeks.human, data.peeks.ai) : t.rulesLine(data.tz));
     if (todo) peeks.append(h("br"), t.todo(todo));
-    // 跨零点那一刻自动刷新（开着页面等的时候）
+    // 跨零點那一刻自動重新整理（開著頁面等的時候）
     clearTimeout(midnight);
     const now = Date.now() + skew;
     const next = data.cells.map((c) => c.open_at * 1000).filter((x) => x > now).sort((a, b) => a - b)[0];

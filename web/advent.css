@@ -1,11 +1,11 @@
-/* advent-for-two · 样式。类名一律 adv- 开头，放进别的页面也不会撞。
-   房子：一张旧卡纸上的红房子；24 扇窗叠木百叶；开过的窗一直亮着烛光，月底整栋楼都亮了。
+/* advent-for-two · 樣式。類名一律 adv- 開頭，放進別的頁面也不會撞。
+   房子：一張舊卡紙上的紅房子；24 扇窗疊木百葉；開過的窗一直亮著燭光，月底整棟樓都亮了。
    All classes are prefixed adv-. Variables live on :root because cards are appended to <body>. */
 :root {
   --adv-paper: #efe5cf; --adv-ink: #3a2f28; --adv-muted: #8a7a68; --adv-line: #d9cbb3; --adv-gold: #b8935a; --adv-wine: #8d2f2f;
   --adv-shutter: #ecdcbc; --adv-shutter-dk: #cdb88f; --adv-slat: #d9c59d;
   --adv-sepia: #6b4423; --adv-old: #f1e2bf; --adv-old-dk: #d8c08f;
-  --adv-cn: "Noto Serif SC", "Hiragino Mincho ProN", "Songti SC", serif;
+  --adv-cn: "Noto Serif TC", "PingFang TC", "Songti TC", serif;
   --adv-fell: "IM Fell English", "EB Garamond", var(--adv-cn), Georgia, serif;
   --adv-fellsc: "IM Fell English SC", "IM Fell English", Georgia, serif;
   --adv-script: "Pinyon Script", "EB Garamond", cursive;
@@ -25,7 +25,7 @@
 .adv-left { font-family: var(--adv-fell); font-style: italic; color: var(--adv-muted); font-size: 14px; }
 .adv-left b { font-style: normal; font-size: 22px; color: var(--adv-ink); font-weight: 400; }
 
-/* 舞台 = 松果 + 房子 */
+/* 舞臺 = 松果 + 房子 */
 .adv-stage { position: relative; }
 .adv-stk { position: absolute; cursor: pointer; -webkit-tap-highlight-color: transparent; border: 0; background: none; padding: 0; z-index: 5; }
 .adv-stk img { display: block; width: 100%; max-width: none; height: auto; pointer-events: none; filter: drop-shadow(0 4px 4px rgba(40, 20, 10, .28)); }
@@ -75,7 +75,7 @@
 @keyframes adv-rl { 30% { transform: rotateY(-14deg) } 60% { transform: rotateY(-4deg) } }
 @keyframes adv-rr { 30% { transform: rotateY(14deg) } 60% { transform: rotateY(4deg) } }
 
-/* 夜里（当地 17:00–6:00 / at night, local time）：楼暗下来，没开的窗是黑的，开过的窗透暖光；开得越多楼越亮 */
+/* 夜裡（當地 17:00–6:00 / at night, local time）：樓暗下來，沒開的窗是黑的，開過的窗透暖光；開得越多樓越亮 */
 .adv-veil, .adv-litall { position: absolute; inset: 0; border-radius: 6px; pointer-events: none; opacity: 0; transition: opacity .8s; }
 .adv-veil { z-index: 1; background: linear-gradient(rgba(14, 22, 62, .62), rgba(8, 12, 38, .55)); mix-blend-mode: multiply; }
 .adv-litall { z-index: 1; background: radial-gradient(ellipse at 50% 52%, rgba(255, 190, 90, .55), rgba(255, 170, 60, 0) 62%); mix-blend-mode: screen; }
@@ -87,7 +87,7 @@
 .adv-house.night .adv-win.open .adv-in { background: radial-gradient(ellipse at 50% 55%, #fff1c4, #ffcf73 55%, #e59a3a); box-shadow: 0 0 10px 3px rgba(255, 190, 90, .75), 0 0 28px 10px rgba(255, 165, 60, .32); }
 .adv-house.night .adv-crab { filter: brightness(.75); }
 
-/* 24 号的大门 */
+/* 24 號的大門 */
 .adv-door { position: absolute; z-index: 1; perspective: 520px; overflow: hidden; border-radius: 50% 50% 0 0/20% 20% 0 0; pointer-events: none; }
 .adv-dglow { position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 72%, #fff4cc, #ffcf73 48%, #c9781f); opacity: 0; transition: opacity .7s; }
 .adv-dleaf { position: absolute; top: 0; bottom: 0; width: 50%; background-repeat: no-repeat; transition: transform 1.1s cubic-bezier(.3, .7, .2, 1); }
@@ -98,21 +98,21 @@
 .adv-house.flash .adv-win.open .adv-in { animation: adv-flash .5s ease-in-out 3; }
 @keyframes adv-flash { 50% { filter: brightness(1.45) } }
 
-/* 飞出来的（挂在 body 上） */
+/* 飛出來的（掛在 body 上） */
 .adv-fly { position: fixed; z-index: 1215; pointer-events: none; transform-origin: 50% 90%; }
 .adv-fly img { width: 100%; max-width: none; display: block; filter: drop-shadow(0 6px 8px rgba(40, 20, 10, .35)); }
 .adv-flybox { position: absolute; left: 28%; top: 50%; width: 44%; }
 .adv-flybox svg, .adv-biggift svg { width: 100%; display: block; filter: drop-shadow(0 2px 2px rgba(40, 20, 10, .3)); }
 .adv-fly[hidden] { display: none; }
 
-/* 屋檐上的小家伙：外框用 bottom 定在雪面上，图从底边往上长（Safari 算高度跟 Chrome 不一样，别靠框高） */
+/* 屋簷上的小傢伙：外框用 bottom 定在雪面上，圖從底邊往上長（Safari 算高度跟 Chrome 不一樣，別靠框高） */
 .adv-crab { position: absolute; z-index: 4; cursor: pointer; transition: left 4s linear; -webkit-tap-highlight-color: transparent; height: 0; }
 .adv-flip { position: absolute; left: 0; right: 0; bottom: 0; height: 0; }
 .adv-crab img { position: absolute; width: 175%; max-width: none; left: 50%; bottom: 0; transform: translate(-44%, 6.9%); pointer-events: none; display: block; }
 .adv-hit { position: absolute; left: 0; right: 0; bottom: 0; aspect-ratio: 1; }
 
 .adv-toast { position: fixed; left: 50%; bottom: calc(22px + env(safe-area-inset-bottom, 0px)); translate: -50% 0; background: #3a2f28; color: #f6ecd8; font-size: 13px;
-  padding: 8px 16px; border-radius: 999px; opacity: 0; transition: opacity .25s; pointer-events: none; white-space: nowrap; z-index: 1230; font-family: "Noto Serif SC", serif; }
+  padding: 8px 16px; border-radius: 999px; opacity: 0; transition: opacity .25s; pointer-events: none; white-space: nowrap; z-index: 1230; font-family: "Noto Serif TC", serif; }
 .adv-toast.show { opacity: .94; }
 .adv-peeks { text-align: center; font-family: var(--adv-fell); font-style: italic; font-size: 13px; color: var(--adv-muted); margin-top: 14px; min-height: 1.2em; line-height: 1.7; }
 .adv-links { display: flex; justify-content: center; gap: 10px; margin-top: 12px; flex-wrap: wrap; }
@@ -120,8 +120,8 @@
 .adv-pill.gold { border-color: var(--adv-gold); color: #9a6b35; }
 .adv-err { text-align: center; color: var(--adv-wine); font-size: 13px; margin: 10px 0; }
 
-/* ── 卡片层：拉近 → 合着的红卡 → 点一下翻开 ── */
-/* flex + 子元素 margin:auto：内容比屏幕高时从顶上开始滚，不会像 grid 居中那样把头切掉 */
+/* ── 卡片層：拉近 → 合著的紅卡 → 點一下翻開 ── */
+/* flex + 子元素 margin:auto：內容比螢幕高時從頂上開始滾，不會像 grid 居中那樣把頭切掉 */
 .adv-zoom > * { margin: auto; flex: none; }
 .adv-zoom { position: fixed; inset: 0; z-index: 1220; display: flex; background: rgba(25, 15, 8, 0); transition: background .45s; overflow-y: auto;
   padding: calc(20px + env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-right, 0px)) calc(20px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px)); }
@@ -137,7 +137,7 @@
 .adv-front .fby { font-family: var(--adv-fell); font-style: italic; font-size: 15px; color: #ecd6a6; }
 .adv-front .fseal { width: 64px; height: 64px; }
 .adv-front .fhint { position: absolute; bottom: 22px; font-family: var(--adv-fell); font-style: italic; font-size: 12px; color: rgba(240, 207, 134, .75); }
-/* 合着的时候红卡面撑高度、里页叠在背面；翻开以后反过来，里页多长卡就多长 */
+/* 合著的時候紅卡面撐高度、裡頁疊在背面；翻開以後反過來，裡頁多長卡就多長 */
 .adv-back { transform: rotateY(180deg); position: absolute; inset: 0; overflow: hidden; }
 .adv-xcard.flipped .adv-back { position: relative; inset: auto; overflow: visible; }
 .adv-xcard.flipped .adv-front { position: absolute; inset: 0; min-height: 0; pointer-events: none; }
@@ -169,7 +169,7 @@
 .adv-btn:disabled { opacity: .5; cursor: default; }
 .adv-btn:focus-visible { outline: 2px solid var(--adv-gold); }
 
-/* ── 编辑页 / 谁藏好了 ── */
+/* ── 編輯頁 / 誰藏好了 ── */
 .adv-sheet { width: min(380px, 100%); }
 .adv-sec { margin-top: 14px; }
 .adv-lab { font-family: var(--adv-fellsc); letter-spacing: .16em; font-size: 10.5px; color: #9a6b35; display: block; margin-bottom: 4px; }

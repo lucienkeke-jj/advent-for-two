@@ -1,10 +1,10 @@
-// 规矩全在这一个文件里：页面（人）和 MCP 工具（AI）用同一份。
+// 規矩全在這一個檔案裡：頁面（人）和 MCP 工具（AI）用同一份。
 // The rules live here. The page (human) and the MCP tools (AI) share them.
 //
-//   12/1–12/24。单数日 AI 藏，双数日人藏，24 号两个人各藏一半。
-//   每格要在前一天 23:59 前藏好；到那天零点（ADVENT_TZ 时区）自动打开。
-//   没到日子：对方只知道「藏好了没」，连图标都看不到。没到日子去点对方的格子 = 偷看一次，记下来，两边都看得到次数。
-//   藏好以后零点前能改 EDIT_LIMIT 次（默认 1）。拆开的格子不消失，留成一面墙。
+//   12/1–12/24。單數日 AI 藏，雙數日人藏，24 號兩個人各藏一半。
+//   每格要在前一天 23:59 前藏好；到那天零點（ADVENT_TZ 時區）自動開啟。
+//   沒到日子：對方只知道「藏好了沒」，連圖示都看不到。沒到日子去點對方的格子 = 偷看一次，記下來，兩邊都看得到次數。
+//   藏好以後零點前能改 EDIT_LIMIT 次（預設 1）。拆開的格子不消失，留成一面牆。
 //
 //   Odd days: the AI hides. Even days: the human hides. Dec 24: half each.
 //   Hide by 23:59 the day before; a window opens at local midnight (ADVENT_TZ).
@@ -23,7 +23,7 @@ export const ITEM_TYPES = ['text', 'song', 'voice', 'audio', 'image', 'file', 'a
 export class AdventError extends Error {}
 const fail = (zh, en) => { throw new AdventError(`${zh} / ${en}`); };
 
-// ── 时区：不用任何库，靠 Intl 算「这个时区的零点」是 UTC 几点 ──
+// ── 時區：不用任何庫，靠 Intl 算「這個時區的零點」是 UTC 幾點 ──
 const fmt = new Intl.DateTimeFormat('en-US', { timeZone: TZ, hourCycle: 'h23', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' });
 export function localParts(sec) {
   const p = Object.fromEntries(fmt.formatToParts(new Date(sec * 1000)).map((x) => [x.type, +x.value]));
@@ -31,17 +31,17 @@ export function localParts(sec) {
 }
 const offsetSec = (sec) => { const p = localParts(sec); return (Date.UTC(p.y, p.m - 1, p.d, p.h, p.min, p.s) / 1000) - sec; };
 export function openAt(d) {
-  const wall = Date.UTC(YEAR, 11, d) / 1000;           // 「12 月 d 号 00:00」当成 UTC
+  const wall = Date.UTC(YEAR, 11, d) / 1000;           // 「12 月 d 號 00:00」當成 UTC
   let t = wall - offsetSec(wall);
-  t = wall - offsetSec(t);                               // 再校一次，夏令时边上也对
+  t = wall - offsetSec(t);                               // 再校一次，夏令時邊上也對
   return t;
 }
-// 试玩用：ADVENT_NOW=2026-12-05T20:00:00+09:00 让时钟从那一刻开始走（正式用别设）
+// 試玩用：ADVENT_NOW=2026-12-05T20:00:00+09:00 讓時鐘從那一刻開始走（正式用別設）
 // For trying it out: ADVENT_NOW sets a fake clock that starts at that moment and keeps ticking. Leave unset for real use.
 const SHIFT = process.env.ADVENT_NOW ? Date.parse(process.env.ADVENT_NOW) - Date.now() : 0;
 if (process.env.ADVENT_NOW && Number.isNaN(SHIFT)) throw new Error("ADVENT_NOW is not a valid date");
 export const nowSec = () => Math.floor((Date.now() + SHIFT) / 1000);
-// 今天是 12 月几号：还没到 12 月 = 0；12 月照实给；之后 = 99
+// 今天是 12 月幾號：還沒到 12 月 = 0；12 月照實給；之後 = 99
 export function todayOf(now = nowSec()) {
   const p = localParts(now);
   if (p.y < YEAR || (p.y === YEAR && p.m < 12)) return 0;
@@ -57,11 +57,11 @@ function checkDay(d) {
   if (!Number.isInteger(n) || n < 1 || n > DAYS) fail('只有 12/1 到 12/24', 'Only Dec 1–24');
   return n;
 }
-function checkRole(r) { if (!ROLES.includes(r)) fail('不认识的人', 'Unknown role'); return r; }
+function checkRole(r) { if (!ROLES.includes(r)) fail('不認識的人', 'Unknown role'); return r; }
 const clip = (s, n) => (s == null ? null : String(s).trim().slice(0, n) || null);
 
 function cleanItems(items) {
-  if (!Array.isArray(items)) fail('items 要是数组', 'items must be an array');
+  if (!Array.isArray(items)) fail('items 要是陣列', 'items must be an array');
   const out = [];
   for (const it of items.slice(0, 12)) {
     if (!it || !ITEM_TYPES.includes(it.type)) continue;
@@ -70,7 +70,7 @@ function cleanItems(items) {
     if (it.abc != null) c.abc = clip(it.abc, 4000);
     if (it.url != null) {
       const u = clip(it.url, 600);
-      // 只收 https 链接和本服务自己的 uploads/，别让人塞 javascript: 之类的东西
+      // 只收 https 連結和本服務自己的 uploads/，別讓人塞 javascript: 之類的東西
       if (u && (/^https:\/\//i.test(u) || /^uploads\/[\w.-]+$/.test(u))) c.url = u;
     }
     if (it.name != null) c.name = clip(it.name, 200);
@@ -99,11 +99,11 @@ export class Advent {
   gift(d, author) { return this.db.gifts.find((g) => g.day === d && g.author === author); }
   event(day, who, kind, at) { this.db.events.push({ day, who, kind, at }); }
 
-  // 藏（或者零点前改）
+  // 藏（或者零點前改）
   hide({ day, author, icon, items, note }, now = nowSec()) {
     const d = checkDay(day); checkRole(author);
-    if (!ownersOf(d).includes(author)) fail(`${d} 号不归你藏（单数日 AI、双数日人、24 号各一半）`, `Dec ${d} isn't yours to hide (odd = AI, even = human, 24 = both)`);
-    if (now >= openAt(d)) fail(`${d} 号已经过了零点，锁住了`, `Dec ${d} is already open and locked`);
+    if (!ownersOf(d).includes(author)) fail(`${d} 號不歸你藏（單數日 AI、雙數日人、24 號各一半）`, `Dec ${d} isn't yours to hide (odd = AI, even = human, 24 = both)`);
+    if (now >= openAt(d)) fail(`${d} 號已經過了零點，鎖住了`, `Dec ${d} is already open and locked`);
     const its = cleanItems(items || []);
     const nt = clip(note, 1200);
     if (!its.length && !nt) fail('空的格子藏不了', 'Nothing to hide');
@@ -114,13 +114,13 @@ export class Advent {
       this.store.save();
       return { day: d, created: true, edits: 0 };
     }
-    if (EDIT_LIMIT != null && old.edits >= EDIT_LIMIT) fail(`${d} 号已经改过 ${old.edits} 次，不能再改了`, `Dec ${d} was already changed ${old.edits} time(s); it's final now`);
+    if (EDIT_LIMIT != null && old.edits >= EDIT_LIMIT) fail(`${d} 號已經改過 ${old.edits} 次，不能再改了`, `Dec ${d} was already changed ${old.edits} time(s); it's final now`);
     Object.assign(old, { icon: ic, items: its, note: nt, edits: old.edits + 1, updated_at: now });
     this.store.save();
     return { day: d, created: false, edits: old.edits };
   }
 
-  // viewer 看到的整面墙。对方的格子：到点前只有「藏没藏」，图标都不给（图标也算剧透）；到点后全给。
+  // viewer 看到的整面牆。對方的格子：到點前只有「藏沒藏」，圖示都不給（圖示也算劇透）；到點後全給。
   view(viewer, now = nowSec()) {
     checkRole(viewer);
     const ev = this.db.events;
@@ -141,7 +141,7 @@ export class Advent {
     return { year: YEAR, tz: TZ, today: todayOf(now), now, hour: localParts(now).h, edit_limit: EDIT_LIMIT, peeks, cells };
   }
 
-  // 没到日子去点 = 偷看一次；到了 = 拆开（第一次拆记时间）
+  // 沒到日子去點 = 偷看一次；到了 = 拆開（第一次拆記時間）
   touch(viewer, day, now = nowSec()) {
     const d = checkDay(day); checkRole(viewer);
     if (!isOpen(d, now)) { this.event(d, viewer, 'peek', now); this.store.save(); return { day: d, open: false, peek: true }; }
@@ -150,14 +150,14 @@ export class Advent {
     return { day: d, open: true, first, gifts: this.db.gifts.filter((g) => g.day === d).map((g) => structuredClone(g)) };
   }
 
-  // 回答对方格子里的问题（到点后才行；可以改）
+  // 回答對方格子裡的問題（到點後才行；可以改）
   answer({ day, viewer, text }, now = nowSec()) {
     const d = checkDay(day); checkRole(viewer);
-    if (!isOpen(d, now)) fail('还没到这天', 'Not open yet');
+    if (!isOpen(d, now)) fail('還沒到這天', 'Not open yet');
     const t = clip(text, 4000);
     if (!t) fail('空的', 'Empty answer');
     const g = this.db.gifts.find((x) => x.day === d && x.author !== viewer);
-    if (!g || (!g.items.some((i) => i.type === 'question') && g.icon !== 'question')) fail('这格没有要你回答的问题', 'No question for you in this window');
+    if (!g || (!g.items.some((i) => i.type === 'question') && g.icon !== 'question')) fail('這格沒有要你回答的問題', 'No question for you in this window');
     const first = !g.answer;
     Object.assign(g, { answer: t, answered_at: now });
     this.store.save();
