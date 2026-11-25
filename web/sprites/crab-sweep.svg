@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="-15 -25 45 45" width="500" height="500">
-  <!-- advent-for-two 可选的小家伙：一只小螃蟹（照 Claude Code 里那只画的同人，跟 Anthropic 无关）。ADVENT_SPRITE=crab 换上。 -->
+  <!-- advent-for-two 可選的小傢伙：一隻小螃蟹（照 Claude Code 裡那隻畫的同人，跟 Anthropic 無關）。ADVENT_SPRITE=crab 換上。 -->
   <style>.b{transform-origin:7.5px 16px;animation:sw 1.2s ease-in-out infinite}@keyframes sw{50%{transform:rotate(-3deg)}}
     .br{transform-origin:14.8px 5.9px;animation:br 1.2s ease-in-out infinite}@keyframes br{0%,100%{transform:rotate(14deg)}50%{transform:rotate(-16deg)}}
     .sn{animation:sn 1.2s ease-out infinite;opacity:0}@keyframes sn{10%{opacity:.9}60%{opacity:0;transform:translate(4px,-2px)}}</style>

@@ -1,4 +1,4 @@
-// node --test test/   —— 规矩的小测试：时区零点、谁藏哪格、到点前看不到、偷看记数、只能改一次、回答问题
+// node --test test/   —— 規矩的小測試：時區零點、誰藏哪格、到點前看不到、偷看記數、只能改一次、回答問題
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';

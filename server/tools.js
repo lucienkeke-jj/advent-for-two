@@ -1,4 +1,4 @@
-// AI 那一边的四个工具（MCP）。AI 只能以 'ai' 的身份调用——看不到人没到日子的格子，规矩在 rules.js。
+// AI 那一邊的四個工具（MCP）。AI 只能以 'ai' 的身份呼叫——看不到人沒到日子的格子，規矩在 rules.js。
 // The AI's four MCP tools. They always act as role 'ai'; rules.js decides what it may see.
 import fs from 'node:fs';
 import path from 'node:path';
@@ -33,7 +33,7 @@ export function toolDefs({ ai, human }) {
       name: 'advent_open',
       description: `Open one of ${human}'s windows (even days, or ${human}'s half of Dec 24). Before local midnight of that day this counts as a peek — it is recorded and ${human} sees the count. Once open you get everything inside, images included.`,
       inputSchema: { type: 'object', properties: { day: { type: 'number' } }, required: ['day'] },
-      annotations: { title: 'Open a window', readOnlyHint: false, destructiveHint: false },   // 没到日子会记一次偷看，所以不算只读
+      annotations: { title: 'Open a window', readOnlyHint: false, destructiveHint: false },   // 沒到日子會記一次偷看，所以不算只讀
     },
     {
       name: 'advent_answer',

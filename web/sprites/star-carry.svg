@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="-15 -25 45 45" width="500" height="500">
-  <!-- advent-for-two 默认的小家伙：一颗小星星。想换成自己的：画布保持 -15 -25 45 45，身子放在 x 0–15，脚踩在 y≈16。 -->
+  <!-- advent-for-two 預設的小傢伙：一顆小星星。想換成自己的：畫布保持 -15 -25 45 45，身子放在 x 0–15，腳踩在 y≈16。 -->
   <style>.b{transform-origin:7.5px 16px;animation:bo .5s ease-in-out infinite}@keyframes bo{50%{transform:translateY(-.6px)}}
     .g{transform-origin:7.5px -2px;animation:gw .5s ease-in-out infinite alternate}@keyframes gw{from{transform:rotate(-4deg)}to{transform:rotate(4deg)}}</style>
   <ellipse cx="7.5" cy="16.5" rx="5" ry=".7" fill="#000" opacity=".12"/><g class="b"><g class=""><path d="M5.6 12.6 L5.6 15.4" stroke="#b07a2a" stroke-width=".9" stroke-linecap="round"/><ellipse cx="5.25" cy="15.8" rx="1.15" ry=".6" fill="#5a3a1a"/></g><g class=""><path d="M9.4 12.6 L9.4 15.4" stroke="#b07a2a" stroke-width=".9" stroke-linecap="round"/><ellipse cx="9.75" cy="15.8" rx="1.15" ry=".6" fill="#5a3a1a"/></g><polygon points="7.50,-2.00 9.91,3.28 15.68,3.94 11.40,7.87 12.55,13.56 7.50,10.70 2.45,13.56 3.60,7.87 -0.68,3.94 5.09,3.28" fill="#f4c95d" stroke="#b07a2a" stroke-width="1.1" stroke-linejoin="round"/>

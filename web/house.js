@@ -1,7 +1,7 @@
 /* advent-for-two · 房子引擎 / the house engine
  *
- * 不依赖任何框架：mountHouse(stage, opts) 往一个空 div 里画整栋楼（24 扇百叶窗、雪、挂件、扫雪的小家伙、24 号的大门），
- * 返回几个方法让页面驱动。卡片、编辑页、数据都在页面那边（app.js）——这里只管房子和动画。
+ * 不依賴任何框架：mountHouse(stage, opts) 往一個空 div 裡畫整棟樓（24 扇百葉窗、雪、掛件、掃雪的小傢伙、24 號的大門），
+ * 返回幾個方法讓頁面驅動。卡片、編輯頁、資料都在頁面那邊（app.js）——這裡只管房子和動畫。
  * Framework-free. Draws the house into an empty div and returns a few methods; cards, editor and data live in app.js.
  *
  *   const h = mountHouse(el, { assets, sprites, onTap(day), labels })
@@ -12,10 +12,10 @@
  *   h.rectOf(day)           an already-lit window: zoom straight from it
  *   h.say(msg), h.destroy()
  *
- * 素材从外面传进来 / assets are passed in:
- *   assets  = { house, ginger, bells, pinecone }       房子和挂件 / the house and ornaments
- *   sprites = { sweep, walk, happy, heart, carry }     扫雪、走路、高兴、爱心眼、扛礼物——默认是一颗小星星，换成你们自己的小家伙
- *             画布照 web/sprites/star-*.svg：viewBox -15 -25 45 45，身子在 x 0–15，脚踩在 y≈16
+ * 素材從外面傳進來 / assets are passed in:
+ *   assets  = { house, ginger, bells, pinecone }       房子和掛件 / the house and ornaments
+ *   sprites = { sweep, walk, happy, heart, carry }     掃雪、走路、高興、愛心眼、扛禮物——預設是一顆小星星，換成你們自己的小傢伙
+ *             畫布照 web/sprites/star-*.svg：viewBox -15 -25 45 45，身子在 x 0–15，腳踩在 y≈16
  *             sweep, walk, happy, heart-eyes, carrying a gift. Default: a little star. Keep the same canvas to swap in your own.
  */
 
@@ -35,11 +35,11 @@ export const ICON_KEYS = Object.keys(ICON).filter((k) => k !== "vide");
 
 const GIFT_SVG = '<svg viewBox="0 0 40 36" aria-hidden="true"><rect x="3" y="12" width="34" height="22" rx="1.5" fill="#8d2f2f" stroke="#5a1b1b" stroke-width="1"/><rect x="1.5" y="8" width="37" height="6" rx="1" fill="#a33b3b" stroke="#5a1b1b" stroke-width="1"/><rect x="17.5" y="8" width="5" height="26" fill="#e7c477"/><rect x="3" y="21" width="34" height="4" fill="#e7c477" opacity=".9"/><path d="M20 8c-4-6-11-5-9-1 1 2 6 2 9 1zm0 0c4-6 11-5 9-1-1 2-6 2-9 1z" fill="#e7c477" stroke="#a07a2c" stroke-width=".8"/></svg>';
 
-// 窗玻璃在原图里的位置（1024×1536，逐像素量的）；数字打乱成老式倒数日历的样子，24 在右下角
+// 窗玻璃在原圖裡的位置（1024×1536，逐畫素量的）；數字打亂成老式倒數日曆的樣子，24 在右下角
 const W = 1024, H = 1536, COLS = [234, 395, 557, 718], ROWS = [324, 473, 624, 773, 922, 1072], GW = 74, GH = 71, PAD = 6;
 const ORDER = [13, 7, 21, 2, 9, 18, 4, 15, 23, 1, 11, 6, 16, 10, 20, 3, 5, 22, 14, 19, 12, 17, 8, 24];
 const DOOR = { x: 427, y: 1222, w: 169, h: 233 };
-// 小家伙扫雪的三处（身子中心的横坐标、脚踩的高度）：左屋檐、右屋檐、门口台阶
+// 小傢伙掃雪的三處（身子中心的橫座標、腳踩的高度）：左屋簷、右屋簷、門口臺階
 const SPOTS = [{ feet: 250, xs: [150, 290] }, { feet: 250, xs: [730, 875] }, { feet: 1500, xs: [360, 660] }];
 const CRAB_W = 170;
 const pct = (v, t) => (v / t) * 100 + "%";
@@ -62,7 +62,7 @@ export function mountHouse(stage, opts) {
   house.append(door, el("span", "adv-veil"), el("span", "adv-litall"));
   const cv = el("canvas", "adv-snow"); cv.setAttribute("aria-hidden", "true"); house.append(cv);
 
-  // 挂件：松果挂在左上、铃铛压着右上角
+  // 掛件：松果掛在左上、鈴鐺壓著右上角
   const pine = el("button", "adv-stk adv-pine", `<span class="adv-hang"><span class="adv-string"></span><img src="${assets.pinecone}" alt=""></span>`);
   pine.type = "button"; pine.setAttribute("aria-label", L.pine);
   const bells = el("button", "adv-stk adv-bells", `<span class="adv-hang"><img src="${assets.bells}" alt=""></span>`);
@@ -70,7 +70,7 @@ export function mountHouse(stage, opts) {
   house.append(bells);
   stage.append(pine, house);
 
-  // 飞出来的小人和大礼物盒挂在 body 上（position:fixed，别被页面的 transform 框住）
+  // 飛出來的小人和大禮物盒掛在 body 上（position:fixed，別被頁面的 transform 框住）
   const ginger = el("div", "adv-fly", `<img src="${assets.ginger}" alt=""><span class="adv-flybox">${GIFT_SVG}</span>`); ginger.hidden = true;
   const carrier = el("div", "adv-fly", `<img src="${sprites.carry}" alt="">`); carrier.hidden = true;
   const biggift = el("div", "adv-fly adv-biggift", GIFT_SVG); biggift.hidden = true;
@@ -109,7 +109,7 @@ export function mountHouse(stage, opts) {
     door.classList.toggle("open", !!s.cells.find((c) => c.day === 24 && c.lit));
   }
 
-  // ── 大门：门板是从原图剪下来的两块 ──
+  // ── 大門：門板是從原圖剪下來的兩塊 ──
   const [dl, dr] = door.querySelectorAll(".adv-dleaf");
   function skinDoor() {
     const hr = house.getBoundingClientRect(), k = hr.width / W;
@@ -119,9 +119,9 @@ export function mountHouse(stage, opts) {
     });
   }
 
-  // ── 声音：都在页面里合成；AudioContext 在点窗的那一下才建（iPhone 规定）──
+  // ── 聲音：都在頁面裡合成；AudioContext 在點窗的那一下才建（iPhone 規定）──
   let ac = null;
-  const getAC = () => { try { ac = ac || new (window.AudioContext || window.webkitAudioContext)(); if (ac.state === "suspended") ac.resume(); } catch { /* 没声音也照样开 */ } return ac; };
+  const getAC = () => { try { ac = ac || new (window.AudioContext || window.webkitAudioContext)(); if (ac.state === "suspended") ac.resume(); } catch { /* 沒聲音也照樣開 */ } return ac; };
   function tone(f, t, dur, vol) {
     const o = ac.createOscillator(), g = ac.createGain(); o.type = "sine"; o.frequency.value = f;
     g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(vol, t + 0.004); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
@@ -134,7 +134,7 @@ export function mountHouse(stage, opts) {
     const s = ac.createBufferSource(), bp = ac.createBiquadFilter(), g = ac.createGain(); bp.type = "bandpass"; bp.frequency.value = 1500; bp.Q.value = 3; g.gain.value = 0.5;
     s.buffer = buf; s.connect(bp).connect(g).connect(ac.destination); s.start(t);
   }
-  // 开窗：百叶两声咔嗒 → Jingle Bells 开头三个 mi（1857 Pierpont，公版）→ 一点亮片；24 号放第一整句
+  // 開窗：百葉兩聲咔嗒 → Jingle Bells 開頭三個 mi（1857 Pierpont，公版）→ 一點亮片；24 號放第一整句
   function openSound(big) {
     if (!getAC()) return;
     try {
@@ -175,7 +175,7 @@ export function mountHouse(stage, opts) {
   }
   const rectOf = (d) => (d === 24 && door.classList.contains("open") ? door : wins.get(d)).getBoundingClientRect();
 
-  // 开窗动画：谁藏的谁来送——单数日小家伙扛出来，双数日姜饼人抱出来；24 号大门打开两个一起出来
+  // 開窗動畫：誰藏的誰來送——單數日小傢伙扛出來，雙數日薑餅人抱出來；24 號大門開啟兩個一起出來
   // Whoever hid it delivers it: odd days the little one carries it out, even days the gingerbread; on the 24th the front door opens.
   function play(d) {
     const b = wins.get(d);
@@ -196,7 +196,7 @@ export function mountHouse(stage, opts) {
       later(() => resolve({ rect: { left: u.left, top: u.top, width: u.right - u.left, height: u.bottom - u.top }, done: () => { cast.forEach((e) => { e.hidden = true; }); anims.forEach((a) => a.cancel()); } }), delay);
     };
     const skip = (e) => { e.preventDefault(); e.stopPropagation(); anims.forEach((a) => a.finish()); finish(); };
-    later(() => document.addEventListener("pointerdown", skip, true), 60);   // 放的时候点一下 = 直接看礼物
+    later(() => document.addEventListener("pointerdown", skip, true), 60);   // 放的時候點一下 = 直接看禮物
     anims[anims.length - 1].onfinish = finish;
   }
   function flyOut(b, d, resolve) {
@@ -205,7 +205,7 @@ export function mountHouse(stage, opts) {
     const e = isAi ? carrier : ginger;
     const w = r.width * (isAi ? 5 : 2.5);
     e.hidden = false;
-    const top = isAi ? r.bottom - w * 0.9 : r.top + r.height * 0.6 - w * 1.1;   // 小家伙脚踩窗台（图里脚底在 90%）；姜饼人从窗当中冒出来
+    const top = isAi ? r.bottom - w * 0.9 : r.top + r.height * 0.6 - w * 1.1;   // 小傢伙腳踩窗臺（圖裡腳底在 90%）；薑餅人從窗當中冒出來
     Object.assign(e.style, { width: w + "px", left: r.left + r.width / 2 - w / 2 + "px", top: top + "px" });
     const a = e.animate([
       { transform: "translateY(55%) scale(.3)", opacity: 0 },
@@ -233,7 +233,7 @@ export function mountHouse(stage, opts) {
     }, 1450);
   }
 
-  // ── 屋檐上扫雪的小家伙：同一处左右挪，或者噗一下换到另一处 ──
+  // ── 屋簷上掃雪的小傢伙：同一處左右挪，或者噗一下換到另一處 ──
   const crab = el("div", "adv-crab", `<span class="adv-flip"><img src="${sprites.sweep}" alt=""></span><span class="adv-hit"></span>`);
   crab.setAttribute("role", "button"); crab.tabIndex = 0; crab.setAttribute("aria-label", L.sprite);
   house.append(crab);

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
-// 给只认 stdio 的 MCP 客户端（比如 Claude Code / Claude Desktop 本地配置）用的小桥：把消息转给 server.js 的 /mcp。
-// 好处是 AI 可以直接给一个本机图片路径，这里先帮它传上去。
+// 給只認 stdio 的 MCP 客戶端（比如 Claude Code / Claude Desktop 本地配置）用的小橋：把訊息轉給 server.js 的 /mcp。
+// 好處是 AI 可以直接給一個本機圖片路徑，這裡先幫它傳上去。
 // A tiny stdio → HTTP bridge for MCP clients that only speak stdio. It also uploads local image paths for advent_hide.
 //
 //   ADVENT_URL=http://127.0.0.1:8024 AI_KEY=... node server/mcp-stdio.js
@@ -32,7 +32,7 @@ async function forward(msg) {
   return r.json();
 }
 
-// 一条一条按顺序处理，回答的顺序跟问的顺序一样 / handle messages one at a time, in order
+// 一條一條按順序處理，回答的順序跟問的順序一樣 / handle messages one at a time, in order
 const rl = readline.createInterface({ input: process.stdin });
 let chain = Promise.resolve();
 rl.on('line', (line) => { chain = chain.then(() => handle(line)); });

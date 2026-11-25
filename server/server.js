@@ -1,12 +1,12 @@
-// advent-for-two · 一个文件的小服务：页面 + API + 给 AI 的 MCP。不装任何依赖，Node 22+ 直接跑。
+// advent-for-two · 一個檔案的小服務：頁面 + API + 給 AI 的 MCP。不裝任何依賴，Node 22+ 直接跑。
 // A one-file server: the page, its API, and an MCP endpoint for the AI. No dependencies; Node 22+.
 //
-//   node --env-file-if-exists=.env server/server.js      （npm start 一样）
+//   node --env-file-if-exists=.env server/server.js      （npm start 一樣）
 //
-// 两把钥匙 / two keys:
-//   HUMAN_KEY  人在页面上输一次，之后记在 cookie 里   — typed once on the page, then kept in a cookie
-//   AI_KEY     给 AI 的 MCP 用（Bearer，或者 /mcp/<AI_KEY>） — for the AI's MCP connection
-// 没设的话第一次启动自动生成，存在 data/keys.json，打印在终端里。
+// 兩把鑰匙 / two keys:
+//   HUMAN_KEY  人在頁面上輸一次，之後記在 cookie 裡   — typed once on the page, then kept in a cookie
+//   AI_KEY     給 AI 的 MCP 用（Bearer，或者 /mcp/<AI_KEY>） — for the AI's MCP connection
+// 沒設的話第一次啟動自動生成，存在 data/keys.json，列印在終端裡。
 
 import http from 'node:http';
 import fs from 'node:fs';
@@ -23,14 +23,14 @@ const WEB = path.join(ROOT, 'web');
 const PORT = +(process.env.PORT || 8024);
 const HOST = process.env.HOST || '127.0.0.1';
 const NAMES = { ai: process.env.AI_NAME || 'Claude', human: process.env.HUMAN_NAME || 'You' };
-// 扫雪的小家伙：star（默认）或 crab / which little one sweeps the snow
-const SPRITE = process.env.ADVENT_SPRITE === 'crab' ? 'crab' : 'star';
+// 掃雪的小傢伙：star（預設）或 crab / which little one sweeps the snow
+const SPRITE = ['crab', 'lynx'].includes(process.env.ADVENT_SPRITE) ? process.env.ADVENT_SPRITE : 'star';
 const WEBHOOK = process.env.ADVENT_WEBHOOK || '';
 const MAX_UPLOAD = 25 * 1024 * 1024;
 
 fs.mkdirSync(UPLOADS, { recursive: true });
 
-// ── 钥匙 ──
+// ── 鑰匙 ──
 function loadKeys() {
   const f = path.join(DATA, 'keys.json');
   let saved = {};
@@ -40,7 +40,7 @@ function loadKeys() {
   for (const r of ['human', 'ai']) if (!keys[r]) { keys[r] = crypto.randomBytes(18).toString('base64url'); made = true; }
   if (made) {
     fs.writeFileSync(f, JSON.stringify({ human: keys.human, ai: keys.ai }, null, 1), { mode: 0o600 });
-    console.log(`\n  新钥匙已生成 / new keys saved to ${f}\n    HUMAN_KEY = ${keys.human}\n    AI_KEY    = ${keys.ai}\n`);
+    console.log(`\n  新鑰匙已生成 / new keys saved to ${f}\n    HUMAN_KEY = ${keys.human}\n    AI_KEY    = ${keys.ai}\n`);
   }
   if (keys.human === keys.ai) throw new Error('HUMAN_KEY and AI_KEY must differ');
   return keys;
@@ -52,14 +52,14 @@ const same = (a, b) => { const x = Buffer.from(String(a)), y = Buffer.from(Strin
 
 const advent = new Advent(path.join(DATA, 'advent.json'));
 
-// ── 有人藏好 / 拆开 / 回答时，往外发一声（可选）：比如接到你们的聊天里，或者 Telegram 机器人 ──
+// ── 有人藏好 / 拆開 / 回答時，往外發一聲（可選）：比如接到你們的聊天裡，或者 Telegram 機器人 ──
 // Optional webhook: POSTs a small JSON when someone hides, opens, answers or nudges. Never includes gift contents.
 function notify(ev) {
   const who = NAMES[ev.who];
   const msg = { hide: `${who} 藏好了 12/${ev.day} 那一格 / ${who} hid Dec ${ev.day}`,
-    open: `${who} 拆开了 12/${ev.day} / ${who} opened Dec ${ev.day}`,
-    answer: `${who} 回答了 12/${ev.day} 的问题 / ${who} answered the question in Dec ${ev.day}`,
-    nudge: `${who} 提醒你：12/${ev.day} 那格还没藏 / ${who} reminds you: Dec ${ev.day} is still empty` }[ev.kind];
+    open: `${who} 拆開了 12/${ev.day} / ${who} opened Dec ${ev.day}`,
+    answer: `${who} 回答了 12/${ev.day} 的問題 / ${who} answered the question in Dec ${ev.day}`,
+    nudge: `${who} 提醒你：12/${ev.day} 那格還沒藏 / ${who} reminds you: Dec ${ev.day} is still empty` }[ev.kind];
   console.log(new Date().toISOString(), msg);
   if (!WEBHOOK) return;
   fetch(WEBHOOK, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ...ev, from: who, message: msg }) }).catch((e) => console.warn('webhook:', e.message));
@@ -83,7 +83,7 @@ function readBody(req, limit) {
     req.on('error', reject);
   });
 }
-async function readJson(req) { const b = await readBody(req, 1024 * 1024); try { return b.length ? JSON.parse(b) : {}; } catch { throw new AdventError('JSON 坏了 / Bad JSON'); } }
+async function readJson(req) { const b = await readBody(req, 1024 * 1024); try { return b.length ? JSON.parse(b) : {}; } catch { throw new AdventError('JSON 壞了 / Bad JSON'); } }
 const cookies = (req) => Object.fromEntries((req.headers.cookie || '').split(/;\s*/).filter(Boolean).map((c) => { const i = c.indexOf('='); return [c.slice(0, i), decodeURIComponent(c.slice(i + 1))]; }));
 const isHuman = (req) => same(cookies(req).advent || '', COOKIE);
 const bearer = (req) => (/^Bearer\s+(.+)$/i.exec(req.headers.authorization || '') || [])[1] || '';
@@ -97,7 +97,7 @@ function serveFile(res, file, cache) {
   });
 }
 
-// ── MCP（JSON-RPC over HTTP，一问一答，不开 SSE）──
+// ── MCP（JSON-RPC over HTTP，一問一答，不開 SSE）──
 const PROTOCOLS = ['2025-06-18', '2025-03-26', '2024-11-05'];
 async function rpc(msg) {
   const { id, method, params = {} } = msg || {};
@@ -109,7 +109,7 @@ async function rpc(msg) {
     instructions: `An advent calendar shared with ${NAMES.human}. Odd days are yours to hide, even days are ${NAMES.human}'s, Dec 24 is half each. Never put a gift in your chat reply — use advent_hide.`,
   });
   if (method === 'ping') return ok({});
-  // 有的客户端连上先问资源和提示词：没有，回空的，别让它卡住
+  // 有的客戶端連上先問資源和提示詞：沒有，回空的，別讓它卡住
   if (method === 'resources/list') return ok({ resources: [] });
   if (method === 'resources/templates/list') return ok({ resourceTemplates: [] });
   if (method === 'prompts/list') return ok({ prompts: [] });
@@ -126,7 +126,7 @@ async function route(req, res) {
   const url = new URL(req.url, 'http://x');
   const p = url.pathname;
 
-  // MCP：POST /mcp（Authorization: Bearer AI_KEY）或 POST /mcp/<AI_KEY>（给不能加请求头的客户端）
+  // MCP：POST /mcp（Authorization: Bearer AI_KEY）或 POST /mcp/<AI_KEY>（給不能加請求頭的客戶端）
   const m = /^\/mcp(?:\/([\w-]+))?\/?$/.exec(p);
   if (m) {
     if (!isAi(req, m[1])) return send(res, 401, { error: 'bad key' });
@@ -139,19 +139,19 @@ async function route(req, res) {
 
   if (p === '/api/login' && req.method === 'POST') {
     const { key } = await readJson(req);
-    if (!same(key || '', KEYS.human)) return send(res, 401, { error: '钥匙不对 / Wrong key' });
+    if (!same(key || '', KEYS.human)) return send(res, 401, { error: '鑰匙不對 / Wrong key' });
     const secure = req.headers['x-forwarded-proto'] === 'https' || process.env.COOKIE_SECURE === '1' ? '; Secure' : '';
     return send(res, 200, { ok: true }, { 'Set-Cookie': `advent=${COOKIE}; HttpOnly; SameSite=Lax; Path=/; Max-Age=${60 * 86400}${secure}` });
   }
 
-  // 上传：body 就是文件本身（不走 multipart），?name= 带原文件名。人和 AI 都能传。
+  // 上傳：body 就是檔案本身（不走 multipart），?name= 帶原檔名。人和 AI 都能傳。
   if (p === '/api/upload' && req.method === 'POST') {
     if (!isHuman(req) && !isAi(req)) return send(res, 401, { error: 'login' });
     const name = String(url.searchParams.get('name') || 'file').slice(0, 120);
     let ext = path.extname(name).toLowerCase().replace(/[^.\w]/g, '');
     if (!ext) ext = { 'audio/mp4': '.m4a', 'audio/webm': '.webm', 'image/jpeg': '.jpg', 'image/png': '.png' }[(req.headers['content-type'] || '').split(';')[0]] || '.bin';
     const buf = await readBody(req, MAX_UPLOAD);
-    if (!buf.length) return send(res, 400, { error: '空文件 / Empty file' });
+    if (!buf.length) return send(res, 400, { error: '空檔案 / Empty file' });
     const file = crypto.randomBytes(12).toString('hex') + ext;
     fs.writeFileSync(path.join(UPLOADS, file), buf);
     return send(res, 200, { url: 'uploads/' + file, name, type: req.headers['content-type'] || '' });
@@ -177,7 +177,7 @@ async function route(req, res) {
     return send(res, 404, { error: 'not found' });
   }
 
-  // 静态页面（公开的只有页面本身和图；数据都在登录后面）
+  // 靜態頁面（公開的只有頁面本身和圖；資料都在登入後面）
   if (req.method !== 'GET' && req.method !== 'HEAD') return send(res, 405, '');
   const rel = p === '/' ? 'index.html' : decodeURIComponent(p).replace(/^\/+/, '');
   const file = path.resolve(WEB, rel);
